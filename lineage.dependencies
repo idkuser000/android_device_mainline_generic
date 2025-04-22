@@ -1,0 +1,10 @@
+[
+  {
+    "repository": "android_device_mainline_common",
+    "target_path": "device/mainline/common"
+  },
+  {
+    "repository": "android_kernel_virt_virtio",
+    "target_path": "kernel/virt/virtio"
+  }
+]
