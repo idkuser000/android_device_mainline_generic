@@ -11,6 +11,10 @@ include device/mainline/common/BoardConfigMainlineCommon.mk
 # A/B
 AB_OTA_UPDATER := false
 
+# Boot manager
+TARGET_BOOT_MANAGER := grub
+TARGET_GRUB_LIVE_CONFIGS := $(DEVICE_PATH)/configs/bootmgr/grub-live.cfg
+
 # Boot parameters
 BOARD_KERNEL_CMDLINE := \
     $(MAINLINE_COMMON_ANDROIDBOOT_PARAMS) \
