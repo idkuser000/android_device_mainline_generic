@@ -36,10 +36,10 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 # Kernel
 BOARD_KERNEL_IMAGE_NAME := bzImage
-TARGET_KERNEL_CONFIG := \
-    gki_defconfig \
-    lineageos/basic_x86_64_pc.config \
-    lineageos/feature/fbcon.config
+TARGET_KERNEL_CONFIG := gki_defconfig
+TARGET_KERNEL_CONFIG_EXT := \
+    $(DEVICE_PATH)/configs/basic_x86_64_pc.config \
+    kernel/mainline/configs/fragments/y/fbcon.config
 TARGET_KERNEL_SOURCE := kernel/virt/virtio
 
 # OTA
