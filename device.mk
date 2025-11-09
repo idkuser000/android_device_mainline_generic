@@ -34,6 +34,11 @@ PRODUCT_PACKAGES += \
 
 $(call soong_config_set,mainline_common_libinit,set_properties_from,dmi_id)
 
+ifeq ($(BASIC_X86_64_PC_USE_PRISTINE_KERNEL),true)
+PRODUCT_PACKAGES += \
+    use_memfd.rc
+endif
+
 # Images
 PRODUCT_BUILD_BOOT_IMAGE := false
 PRODUCT_BUILD_RAMDISK_IMAGE := true
