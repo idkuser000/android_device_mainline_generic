@@ -1,0 +1,1 @@
+require board=Generic_x86_64

@@ -4,22 +4,22 @@
 //
 
 prebuilt_etc {
-    name: "fstab.basic_x86_64_pc",
-    src: "fstab.basic_x86_64_pc",
+    name: "fstab.generic",
+    src: "fstab.generic",
     vendor: true,
     ramdisk_available: true,
 }
 
 prebuilt_etc {
-    name: "init.basic_x86_64_pc.rc",
-    src: "init.basic_x86_64_pc.rc",
+    name: "init.generic.rc",
+    src: "init.generic.rc",
     sub_dir: "init/hw",
     vendor: true,
 }
 
 prebuilt_etc {
-    name: "init.recovery.basic_x86_64_pc.rc",
-    src: "init.recovery.basic_x86_64_pc.rc",
+    name: "init.recovery.generic.rc",
+    src: "init.recovery.generic.rc",
     sub_dir: "init",
     recovery: true,
 }

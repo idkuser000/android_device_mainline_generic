@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-USES_DEVICE_PC_BASIC_X86_64_PC := true
+USES_DEVICE_MAINLINE_GENERIC := true
 
 # Inherit from mainline/common
 include device/mainline/common/BoardConfigMainlineCommon.mk
@@ -11,17 +11,12 @@ include device/mainline/common/BoardConfigMainlineCommon.mk
 # A/B
 AB_OTA_UPDATER := false
 
-# Architecture
-TARGET_CPU_ABI := x86_64
-TARGET_ARCH := x86_64
-TARGET_ARCH_VARIANT := sandybridge
-
 # Boot parameters
 BOARD_KERNEL_CMDLINE := \
     $(MAINLINE_COMMON_ANDROIDBOOT_PARAMS) \
     $(MAINLINE_COMMON_KERNEL_PARAMS) \
     androidboot.boot_devices=any \
-    androidboot.hardware=basic_x86_64_pc \
+    androidboot.hardware=generic \
     androidboot.partition_map=sda1,system;sda2,vendor;sda3,userdata \
     androidboot.selinux=permissive \
     androidboot.verifiedbootstate=orange \
@@ -35,24 +30,9 @@ TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USERIMAGES_USE_EXT4 := true
 
 # Kernel
-BOARD_KERNEL_IMAGE_NAME := bzImage
-ifeq ($(BASIC_X86_64_PC_USE_PRISTINE_KERNEL),true)
-TARGET_KERNEL_CONFIG := x86_64_defconfig
-TARGET_KERNEL_CONFIG_EXT := \
-    kernel/mainline/configs/fragments/android-base-pre/common.config \
-    kernel/mainline/configs/fragments/android-base-pre/x86_64.config \
-    kernel/configs/b/android-6.12/android-base.config \
-    kernel/mainline/configs/fragments/android-base-conditional/CONFIG_X86-y.config \
-    kernel/mainline/configs/fragments/android-base-conditional/CONFIG_X86_64-y.config \
-    kernel/mainline/configs/fragments/common.config \
-    $(DEVICE_PATH)/configs/basic_x86_64_pc.config \
-    kernel/mainline/configs/fragments/y/fbcon.config
+ifeq ($(MAINLINE_GENERIC_USE_PRISTINE_KERNEL),true)
 TARGET_KERNEL_SOURCE ?= kernel/mainline/linux
 else
-TARGET_KERNEL_CONFIG := gki_defconfig
-TARGET_KERNEL_CONFIG_EXT := \
-    $(DEVICE_PATH)/configs/basic_x86_64_pc.config \
-    kernel/mainline/configs/fragments/y/fbcon.config
 TARGET_KERNEL_SOURCE := kernel/virt/virtio
 endif
 
@@ -71,13 +51,13 @@ BOARD_VENDORIMAGE_PARTITION_RESERVED_SIZE := 67108864
 TARGET_COPY_OUT_VENDOR := vendor
 
 # Platform
-TARGET_BOARD_PLATFORM := basic_x86_64_pc
+TARGET_BOARD_PLATFORM := generic
 
 # Ramdisk
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/configs/fstab.basic_x86_64_pc
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/configs/fstab.generic
 
 # VINTF
 DEVICE_MANIFEST_FILE := \

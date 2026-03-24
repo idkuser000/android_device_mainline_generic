@@ -13,8 +13,8 @@ on property:sys.bootstat.first_boot_completed=1
 # Mount
 on fs
     # Mount everything that does not require fsck
-    mount_all /vendor/etc/fstab.basic_x86_64_pc --early
+    mount_all --early
 
 on late-fs
     # Mount RW partitions which need run fsck
-    mount_all /vendor/etc/fstab.basic_x86_64_pc --late
+    mount_all --late

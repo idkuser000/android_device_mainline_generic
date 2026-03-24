@@ -8,10 +8,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 
 # Inherit from device
-$(call inherit-product, device/pc/basic_x86_64_pc/device.mk)
+$(call inherit-product, device/mainline/generic/Generic_x86_64/device.mk)
 
-PRODUCT_NAME := aosp_basic_x86_64_pc
-PRODUCT_DEVICE := basic_x86_64_pc
-PRODUCT_BRAND := PC
-PRODUCT_MANUFACTURER := PC
-PRODUCT_MODEL := Basic x86_64 PC
+PRODUCT_NAME := aosp_Generic_x86_64
+PRODUCT_DEVICE := Generic_x86_64
+PRODUCT_BRAND := Generic
+PRODUCT_MANUFACTURER := Generic
+PRODUCT_MODEL := Generic x86_64

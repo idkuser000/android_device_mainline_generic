@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-DEVICE_PATH := device/pc/basic_x86_64_pc
+DEVICE_PATH := device/mainline/generic
 
 # Inherit from mainline/common
 TARGET_HAS_BATTERY := false
@@ -27,14 +27,14 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    fstab.basic_x86_64_pc \
-    fstab.basic_x86_64_pc.ramdisk \
-    init.basic_x86_64_pc.rc \
-    init.recovery.basic_x86_64_pc.rc
+    fstab.generic \
+    fstab.generic.ramdisk \
+    init.generic.rc \
+    init.recovery.generic.rc
 
 $(call soong_config_set,mainline_common_libinit,set_properties_from,dmi_id)
 
-ifeq ($(BASIC_X86_64_PC_USE_PRISTINE_KERNEL),true)
+ifeq ($(MAINLINE_GENERIC_USE_PRISTINE_KERNEL),true)
 PRODUCT_PACKAGES += \
     use_memfd.rc
 endif
