@@ -125,13 +125,14 @@ static UeventdConfiguration GetConfiguration() {
 
 void main_loop(const UeventListener& uevent_listener,
                const std::vector<std::shared_ptr<UeventHandler>>& uevent_handlers) {
-    uevent_listener.Poll([&uevent_handlers](const Uevent& uevent) {
-        for (auto& uevent_handler : uevent_handlers) {
-            uevent_handler->HandleUevent(uevent);
-        }
-        if (MountHandler::CanQuitUeventd()) return ListenerAction::kStop;
-        return ListenerAction::kContinue;
-    });
+    do {
+        uevent_listener.Poll([&uevent_handlers](const Uevent& uevent) {
+            for (auto& uevent_handler : uevent_handlers) {
+                uevent_handler->HandleUevent(uevent);
+            }
+            return ListenerAction::kContinue;
+        }, true, 5s);
+    } while (!MountHandler::CanQuitUeventd());
 }
 
 void parallel_main_loop(const UeventListener& uevent_listener,

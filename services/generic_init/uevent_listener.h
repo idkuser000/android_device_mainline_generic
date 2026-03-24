@@ -52,7 +52,7 @@ class UeventListener {
     void RegenerateUevents(const ListenerCallback& callback) const;
     ListenerAction RegenerateUeventsForPath(const std::string& path,
                                             const ListenerCallback& callback) const;
-    void Poll(const ListenerCallback& callback,
+    void Poll(const ListenerCallback& callback, const bool reset_start_time_on_uevent = false,
               const std::optional<std::chrono::milliseconds> relative_timeout = {}) const;
 
   private:
