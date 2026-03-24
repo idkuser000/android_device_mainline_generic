@@ -13,6 +13,10 @@ void OnPreBlockDevices(void) {
 void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& devpath, const std::vector<std::string>& links) {
 }
 
+bool CanQuitUeventd(void) {
+    return false;
+}
+
 void OnPostBlockDevices(void) {
 }
 

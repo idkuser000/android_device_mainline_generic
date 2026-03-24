@@ -37,6 +37,7 @@
 #include "devices.h"
 #include "firmware_handler.h"
 #include "modalias_handler.h"
+#include "mount_handler.h"
 #include "uevent_dependency_graph.h"
 #include "uevent_handler.h"
 #include "uevent_listener.h"
@@ -128,6 +129,7 @@ void main_loop(const UeventListener& uevent_listener,
         for (auto& uevent_handler : uevent_handlers) {
             uevent_handler->HandleUevent(uevent);
         }
+        if (MountHandler::CanQuitUeventd()) return ListenerAction::kStop;
         return ListenerAction::kContinue;
     });
 }
@@ -203,6 +205,11 @@ int ueventd_main(void) {
     ColdBoot cold_boot(uevent_listener, uevent_handlers);
     cold_boot.Run();
 
+    if (MountHandler::CanQuitUeventd()) {
+        LOG(INFO) << "Exit ueventd";
+        return EXIT_SUCCESS;
+    }
+
     for (auto& uevent_handler : uevent_handlers) {
         uevent_handler->ColdbootDone();
     }
@@ -229,8 +236,8 @@ int ueventd_main(void) {
         main_loop(uevent_listener, uevent_handlers);
     }
 
-    LOG(ERROR) << "main loop exited unexpectedly";
-    return EXIT_FAILURE;
+    LOG(INFO) << "Exit ueventd main loop";
+    return EXIT_SUCCESS;
 }
 
 }  // namespace init
