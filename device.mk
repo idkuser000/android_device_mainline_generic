@@ -31,7 +31,6 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     fstab.generic \
-    fstab.generic.ramdisk \
     init.generic.rc \
     init.recovery.generic.rc
 

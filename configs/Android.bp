@@ -7,7 +7,6 @@ prebuilt_etc {
     name: "fstab.generic",
     src: "fstab.generic",
     vendor: true,
-    ramdisk_available: true,
 }
 
 prebuilt_etc {
