@@ -561,8 +561,12 @@ static void RemoveDeviceMapperLinks(const std::string& devpath) {
     }
 }
 
-void DeviceHandler::HandleDevice(const std::string& action, const std::string& devpath, bool block,
-                                 int major, int minor, const std::vector<std::string>& links) const {
+void DeviceHandler::HandleDevice(const Uevent& uevent, const std::string& devpath, bool block,
+                                 const std::vector<std::string>& links) const {
+    const std::string& action = uevent.action;
+    const int& major = uevent.major;
+    const int& minor = uevent.minor;
+
     if (action == "add") {
         MakeDevice(devpath, block, major, minor, links);
     }
@@ -617,7 +621,7 @@ void DeviceHandler::HandleDevice(const std::string& action, const std::string& d
     }
 
     if (block && action == "add") {
-        MountHandler::OnBlockDeviceAdd(devpath, links);
+        MountHandler::OnBlockDeviceAdd(uevent, devpath, links);
     }
 }
 
@@ -684,7 +688,7 @@ void DeviceHandler::HandleBindInternal(std::string driver_name, std::string acti
 
         std::string devpath = driver->ParseDevPath(tracked.uevent);
         mkdir_recursive(Dirname(devpath), 0755);
-        HandleDevice(action, devpath, false, tracked.uevent.major, tracked.uevent.minor,
+        HandleDevice(tracked.uevent, devpath, false,
                      std::vector<std::string>{});
     }
 }
@@ -760,7 +764,7 @@ void DeviceHandler::HandleUevent(const Uevent& uevent) {
 
     mkdir_recursive(Dirname(devpath), 0755);
 
-    HandleDevice(uevent.action, devpath, block, uevent.major, uevent.minor, links);
+    HandleDevice(uevent, devpath, block, links);
 }
 
 void DeviceHandler::ColdbootDone() {

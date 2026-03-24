@@ -171,8 +171,8 @@ class DeviceHandler : public UeventHandler {
     void MakeDevice(const std::string& path, bool block, int major, int minor,
                     const std::vector<std::string>& links) const;
     std::vector<std::string> GetBlockDeviceSymlinks(const Uevent& uevent) const;
-    void HandleDevice(const std::string& action, const std::string& devpath, bool block, int major,
-                      int minor, const std::vector<std::string>& links) const;
+    void HandleDevice(const Uevent& uevent, const std::string& devpath, bool block,
+                      const std::vector<std::string>& links) const;
     void FixupSysPermissions(const std::string& upath, const std::string& subsystem) const;
 
     void TrackDeviceUevent(const Uevent& uevent) EXCLUDES(device_update_lock_);

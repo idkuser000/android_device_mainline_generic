@@ -5,11 +5,13 @@
 
 #pragma once
 
+#include "uevent.h"
+
 #include <string>
 #include <vector>
 
 namespace MountHandler {
 
-void OnBlockDeviceAdd(const std::string& devpath, const std::vector<std::string>& links);
+void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& devpath, const std::vector<std::string>& links);
 
 }  // namespace
