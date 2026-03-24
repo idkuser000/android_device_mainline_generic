@@ -15,14 +15,13 @@ AB_OTA_UPDATER := false
 BOARD_KERNEL_CMDLINE := \
     $(MAINLINE_COMMON_ANDROIDBOOT_PARAMS) \
     $(MAINLINE_COMMON_KERNEL_PARAMS) \
-    androidboot.boot_devices=any \
     androidboot.hardware=generic \
-    androidboot.partition_map=sda1,system;sda2,vendor;sda3,userdata \
     androidboot.selinux=permissive \
     androidboot.verifiedbootstate=orange \
     audit=0 \
     console=tty0 \
-    mitigations=off
+    mitigations=off \
+    rdinit=/system/bin/generic_init
 
 # Filesystem
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
