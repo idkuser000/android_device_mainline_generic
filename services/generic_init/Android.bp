@@ -33,6 +33,7 @@ cc_binary {
         "ueventd_parser.cpp",
 
         "mount_helpers.cpp",
+        "shims.cpp",
     ],
 
     static_libs: [
