@@ -16,6 +16,21 @@ cc_binary {
         "first_stage_main.cpp",
         "reboot_utils.cpp",
         "switch_root.cpp",
+
+        "coldboot.cpp",
+        "coldboot_runner_subprocess.cpp",
+        "coldboot_runner_thread_pool.cpp",
+        "devices.cpp",
+        "firmware_handler.cpp",
+        "import_parser.cpp",
+        "modalias_handler.cpp",
+        "parser.cpp",
+        "thread_pool.cpp",
+        "tokenizer.cpp",
+        "uevent_dependency_graph.cpp",
+        "uevent_listener.cpp",
+        "ueventd.cpp",
+        "ueventd_parser.cpp",
     ],
 
     static_libs: [
@@ -24,6 +39,10 @@ cc_binary {
         "liblog",
         "libcap",
         "libbootloader_message",
+
+        "libdm",
+        "libext2_uuid",
+        "libmodprobe",
     ],
 
     static_executable: true,
@@ -33,7 +52,7 @@ cc_binary {
         "-Wall",
         "-Wextra",
         "-Wno-unused-parameter",
-        "-Wexit-time-destructors",
+        "-Wno-exit-time-destructors",
         "-Werror",
         "-DALLOW_FIRST_STAGE_CONSOLE=0",
         "-DALLOW_LOCAL_PROP_OVERRIDE=0",

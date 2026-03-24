@@ -45,6 +45,7 @@
 #include "reboot_utils.h"
 #include "second_stage_resources.h"
 #include "switch_root.h"
+#include "ueventd.h"
 
 using android::base::boot_clock;
 
@@ -300,6 +301,7 @@ int FirstStageMain(int argc, char** argv) {
         SwitchRoot("/first_stage_ramdisk");
     }
 
+    ueventd_main();
     // TODO: Handle partition mounts here
 
     struct stat new_root_info {};
