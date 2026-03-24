@@ -32,6 +32,7 @@ cc_binary {
         "ueventd.cpp",
         "ueventd_parser.cpp",
 
+        "mount_handler.cpp",
         "mount_helpers.cpp",
         "shims.cpp",
     ],
@@ -46,6 +47,15 @@ cc_binary {
         "libdm",
         "libext2_uuid",
         "libmodprobe",
+
+        "libfs_mgr",
+        "libavb",
+        "libcrypto_static",
+        "libfec",
+        "libfec_rs",
+        "libfs_avb",
+        "libgsi",
+        "liblp",
     ],
 
     static_executable: true,

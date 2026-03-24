@@ -250,9 +250,6 @@ int FirstStageMain(int argc, char** argv) {
     }
 
     auto want_console = ALLOW_FIRST_STAGE_CONSOLE ? FirstStageConsole(cmdline, bootconfig) : 0;
-
-    // TODO: Handle kernel module loading here
-
     if (want_console == FirstStageConsoleParam::CONSOLE_ON_FAILURE) {
         StartConsole(cmdline);
     }
@@ -301,8 +298,8 @@ int FirstStageMain(int argc, char** argv) {
         SwitchRoot("/first_stage_ramdisk");
     }
 
+    // Kernel module loading and partition mounting are handled here
     ueventd_main();
-    // TODO: Handle partition mounts here
 
     struct stat new_root_info {};
     if (stat("/", &new_root_info) != 0) {

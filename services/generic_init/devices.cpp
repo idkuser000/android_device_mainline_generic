@@ -15,6 +15,7 @@
  */
 
 #include "devices.h"
+#include "mount_handler.h"
 
 #include <errno.h>
 #include <fnmatch.h>
@@ -613,6 +614,10 @@ void DeviceHandler::HandleDevice(const std::string& action, const std::string& d
             }
         }
         unlink(devpath.c_str());
+    }
+
+    if (block && action == "add") {
+        MountHandler::OnBlockDeviceAdd(devpath, links);
     }
 }
 
