@@ -27,6 +27,9 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
+    generic_init_first_stage
+
+PRODUCT_PACKAGES += \
     fstab.generic \
     fstab.generic.ramdisk \
     init.generic.rc \
