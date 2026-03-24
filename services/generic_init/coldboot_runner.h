@@ -37,6 +37,21 @@ class ColdbootRunner {
     virtual void Wait() = 0;
 };
 
+class ColdbootRunnerNoParallel : public ColdbootRunner {
+  public:
+    ColdbootRunnerNoParallel(const std::vector<Uevent>& uevent_queue,
+                             const std::vector<std::shared_ptr<UeventHandler>>& uevent_handlers);
+
+    void StartInBackground() override;
+    void Wait() override;
+
+  private:
+    void UeventHandlerMain(void);
+
+    const std::vector<Uevent>& uevent_queue_;
+    const std::vector<std::shared_ptr<UeventHandler>>& uevent_handlers_;
+};
+
 class ColdbootRunnerSubprocess : public ColdbootRunner {
   public:
     ColdbootRunnerSubprocess(unsigned int num_handler_processes,

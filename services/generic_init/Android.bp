@@ -18,6 +18,7 @@ cc_binary {
         "switch_root.cpp",
 
         "coldboot.cpp",
+        "coldboot_runner_noparallel.cpp",
         "coldboot_runner_subprocess.cpp",
         "coldboot_runner_thread_pool.cpp",
         "devices.cpp",

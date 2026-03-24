@@ -40,6 +40,7 @@ void ColdBoot::Run() {
 
     std::unique_ptr<ColdbootRunner> runner;
 
+/*
     unsigned int parallelism = std::thread::hardware_concurrency() ?: 4;
     if (false) {
         runner = std::make_unique<ColdbootRunnerThreadPool>(
@@ -48,6 +49,9 @@ void ColdBoot::Run() {
         runner = std::make_unique<ColdbootRunnerSubprocess>(
                 parallelism, uevent_queue_, uevent_handlers_);
     }
+*/
+    runner = std::make_unique<ColdbootRunnerNoParallel>(
+            uevent_queue_, uevent_handlers_);
 
     runner->StartInBackground();
 
