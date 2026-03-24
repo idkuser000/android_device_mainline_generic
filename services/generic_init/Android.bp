@@ -31,6 +31,8 @@ cc_binary {
         "uevent_listener.cpp",
         "ueventd.cpp",
         "ueventd_parser.cpp",
+
+        "mount_helpers.cpp",
     ],
 
     static_libs: [
