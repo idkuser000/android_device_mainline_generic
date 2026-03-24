@@ -164,7 +164,6 @@ int FirstStageMain(int argc, char** argv) {
     // Clear the umask.
     umask(0);
 
-    CHECKCALL(clearenv());
     CHECKCALL(setenv("PATH", _PATH_DEFPATH, 1));
     // Get the basic filesystem setup we need put together in the initramdisk
     // on / and then we'll let the rc file figure out the rest.
