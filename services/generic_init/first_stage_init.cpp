@@ -15,6 +15,7 @@
  */
 
 #include "first_stage_init.h"
+#include "mount_handler.h"
 
 #include <dirent.h>
 #include <fcntl.h>
@@ -299,7 +300,9 @@ int FirstStageMain(int argc, char** argv) {
     }
 
     // Kernel module loading and partition mounting are handled here
+    MountHandler::OnPreBlockDevices();
     ueventd_main();
+    MountHandler::OnPostBlockDevices();
 
     struct stat new_root_info {};
     if (stat("/", &new_root_info) != 0) {
