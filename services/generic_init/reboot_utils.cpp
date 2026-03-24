@@ -27,6 +27,7 @@
 #include <android-base/properties.h>
 #include <android-base/strings.h>
 #include <cutils/android_reboot.h>
+#include <fs_mgr.h>
 
 #include "capabilities.h"
 #include "reboot_utils.h"
@@ -46,13 +47,21 @@ void SetFatalRebootTarget(const std::optional<std::string>& reboot_target) {
     cmdline = android::base::Trim(cmdline);
 
     const std::string kInitFatalPanicParamString = "androidboot.init_fatal_panic";
-    if (cmdline.find(kInitFatalPanicParamString) != std::string::npos) {
+    if (cmdline.find(kInitFatalPanicParamString) == std::string::npos) {
+        std::string value;
+        init_fatal_panic = (android::fs_mgr::GetBootconfig(kInitFatalPanicParamString, &value) &&
+                            value == "true");
+    } else {
         const std::string kInitFatalPanicString = kInitFatalPanicParamString + "=true";
         init_fatal_panic = cmdline.find(kInitFatalPanicString) != std::string::npos;
     }
 
     const std::string kInitFatalPauseParamString = "androidboot.init_fatal_pause";
-    if (cmdline.find(kInitFatalPauseParamString) != std::string::npos) {
+    if (cmdline.find(kInitFatalPauseParamString) == std::string::npos) {
+        std::string value;
+        init_fatal_pause = (android::fs_mgr::GetBootconfig(kInitFatalPauseParamString, &value) &&
+                            value == "true");
+    } else {
         const std::string kInitFatalPauseString = kInitFatalPauseParamString + "=true";
         init_fatal_pause = cmdline.find(kInitFatalPauseString) != std::string::npos;
     }
@@ -64,7 +73,10 @@ void SetFatalRebootTarget(const std::optional<std::string>& reboot_target) {
 
     const std::string kRebootTargetString = "androidboot.init_fatal_reboot_target";
     auto start_pos = cmdline.find(kRebootTargetString);
-    if (start_pos != std::string::npos) {
+    if (start_pos == std::string::npos) {
+        android::fs_mgr::GetBootconfig(kRebootTargetString, &init_fatal_reboot_target);
+        // We already default to bootloader if no setting is provided.
+    } else {
         const std::string kRebootTargetStringPattern = kRebootTargetString + "=";
         start_pos += sizeof(kRebootTargetStringPattern) - 1;
 
