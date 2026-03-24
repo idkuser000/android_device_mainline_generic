@@ -26,6 +26,9 @@ PRODUCT_PACKAGES += \
     vndservicemanager
 
 # Init
+PRODUCT_COPY_FILES += \
+    system/core/rootdir/ueventd.rc:$(TARGET_COPY_OUT_RAMDISK)/system/etc/ueventd.ramdisk.rc
+
 PRODUCT_PACKAGES += \
     generic_init_first_stage
 
