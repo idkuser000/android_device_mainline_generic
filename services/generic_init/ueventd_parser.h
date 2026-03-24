@@ -33,7 +33,7 @@ struct UeventdConfiguration {
     std::vector<std::string> firmware_directories;
     std::vector<ExternalFirmwareHandler> external_firmware_handlers;
     bool enable_modalias_handling = false;
-    size_t uevent_socket_rcvbuf_size = 0;
+    size_t uevent_socket_rcvbuf_size = 16 * 1024 * 1024;
     bool enable_parallel_ueventd_main_loop = false;
     std::optional<size_t> parallel_main_loop_max_workers;
 };
