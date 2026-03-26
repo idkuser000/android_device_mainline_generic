@@ -47,6 +47,7 @@
 #include "second_stage_resources.h"
 #include "switch_root.h"
 #include "ueventd.h"
+#include "ueventd_parser.h"
 
 using android::base::boot_clock;
 
@@ -289,6 +290,8 @@ int FirstStageMain(int argc, char** argv) {
         setenv("INIT_FORCE_DEBUGGABLE", "true", 1);
     }
 
+    auto ueventd_configuration = ParseConfig({"/system/etc/ueventd.ramdisk.rc"});
+
     if (true) {
         mkdir("/first_stage_ramdisk", 0755);
         // SwitchRoot() must be called with a mount point as the target, so we bind mount the
@@ -301,7 +304,7 @@ int FirstStageMain(int argc, char** argv) {
 
     // Kernel module loading and partition mounting are handled here
     MountHandler::OnPreBlockDevices();
-    ueventd_main();
+    ueventd_main(ueventd_configuration);
     MountHandler::OnPostBlockDevices();
 
     struct stat new_root_info {};

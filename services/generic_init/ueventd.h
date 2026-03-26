@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+#include "ueventd_parser.h"
+
 #ifndef _INIT_UEVENTD_H_
 #define _INIT_UEVENTD_H_
 
 namespace android {
 namespace init {
 
-int ueventd_main(void);
+int ueventd_main(const UeventdConfiguration& ueventd_configuration);
 
 }  // namespace init
 }  // namespace android

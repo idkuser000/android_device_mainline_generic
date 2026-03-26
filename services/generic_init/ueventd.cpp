@@ -118,11 +118,6 @@
 namespace android {
 namespace init {
 
-static UeventdConfiguration GetConfiguration() {
-    std::vector<std::string> canonical{"/system/etc/ueventd.ramdisk.rc"};
-    return ParseConfig(canonical);
-}
-
 void main_loop(const UeventListener& uevent_listener,
                const std::vector<std::shared_ptr<UeventHandler>>& uevent_handlers) {
     do {
@@ -161,7 +156,7 @@ void parallel_main_loop(const UeventListener& uevent_listener,
     });
 }
 
-int ueventd_main(void) {
+int ueventd_main(const UeventdConfiguration& ueventd_configuration) {
     /*
      * init sets the umask to 077 for forked processes. We need to
      * create files with exact permissions, without modification by
@@ -172,8 +167,6 @@ int ueventd_main(void) {
     LOG(INFO) << "generic_init ueventd started!";
 
     std::vector<std::shared_ptr<UeventHandler>> uevent_handlers;
-
-    auto ueventd_configuration = GetConfiguration();
 
     UeventListener uevent_listener(ueventd_configuration.uevent_socket_rcvbuf_size);
 
