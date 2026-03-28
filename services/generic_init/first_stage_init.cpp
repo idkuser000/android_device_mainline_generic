@@ -150,6 +150,30 @@ void SetStdioToDevNull(char** argv) {
     if (fd > STDERR_FILENO) close(fd);
 }
 
+void ExecuteSecondStageInit(void) {
+    const char* path = "/system/bin/init";
+    const char* args[] = {path, "selinux_setup", nullptr};
+
+#ifdef HWASAN_OPTIONS
+    // (second stage) init is the first process to use HWASan. It gets run too
+    // early for the HWASAN_OPTIONS in init.environ.rc.gen to apply, so we
+    // have to do it here manually.
+    //
+    // This is especially important for disable_coredump, which defaults to 1.
+    // If the user sets it to `0` in HWASAN_OPTIONS, and we didn't also apply
+    // it to (second stage) init, the setting would not take effect. This is
+    // because `0` is in fact a noop, while `1` applies changes. These changes
+    // are inherited beyond exec.
+    setenv("HWASAN_OPTIONS", STRINGIFY(HWASAN_OPTIONS), true);
+#endif
+
+    execv(path, const_cast<char**>(args));
+
+    // execv() only returns if an error happened, in which case we
+    // panic and never fall through this conditional.
+    PLOG(FATAL) << "execv(\"" << path << "\") failed";
+}
+
 }  // namespace
 
 int FirstStageMain(int argc, char** argv) {
@@ -320,29 +344,12 @@ int FirstStageMain(int argc, char** argv) {
     setenv(kEnvFirstStageStartedAt, std::to_string(start_time.time_since_epoch().count()).c_str(),
            1);
 
-    const char* path = "/system/bin/init";
-    const char* args[] = {path, "selinux_setup", nullptr};
     auto fd = open("/dev/kmsg", O_WRONLY | O_CLOEXEC);
     dup2(fd, STDOUT_FILENO);
     dup2(fd, STDERR_FILENO);
     close(fd);
-#ifdef HWASAN_OPTIONS
-    // (second stage) init is the first process to use HWASan. It gets run too
-    // early for the HWASAN_OPTIONS in init.environ.rc.gen to apply, so we
-    // have to do it here manually.
-    //
-    // This is especially important for disable_coredump, which defaults to 1.
-    // If the user sets it to `0` in HWASAN_OPTIONS, and we didn't also apply
-    // it to (second stage) init, the setting would not take effect. This is
-    // because `0` is in fact a noop, while `1` applies changes. These changes
-    // are inherited beyond exec.
-    setenv("HWASAN_OPTIONS", STRINGIFY(HWASAN_OPTIONS), true);
-#endif
-    execv(path, const_cast<char**>(args));
 
-    // execv() only returns if an error happened, in which case we
-    // panic and never fall through this conditional.
-    PLOG(FATAL) << "execv(\"" << path << "\") failed";
+    ExecuteSecondStageInit();
 
     return 1;
 }
