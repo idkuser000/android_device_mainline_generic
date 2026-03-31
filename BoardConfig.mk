@@ -56,8 +56,8 @@ TARGET_BOARD_PLATFORM := generic
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/configs/fstab.generic
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/configs/fstab/fstab.generic
 
 # VINTF
 DEVICE_MANIFEST_FILE := \
-    $(DEVICE_PATH)/configs/manifest.xml
+    $(DEVICE_PATH)/configs/vintf/manifest.xml

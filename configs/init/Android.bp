@@ -4,12 +4,6 @@
 //
 
 prebuilt_etc {
-    name: "fstab.generic",
-    src: "fstab.generic",
-    vendor: true,
-}
-
-prebuilt_etc {
     name: "init.generic.rc",
     src: "init.generic.rc",
     sub_dir: "init/hw",
