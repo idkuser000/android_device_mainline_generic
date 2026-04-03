@@ -72,7 +72,9 @@ struct BlockDeviceInfo {
     std::vector<std::string> android_dir_have_subdirs;
 };
 
-std::vector<std::shared_ptr<BlockDeviceInfo>> block_devices;
+// devname, BlockDeviceInfo
+using BlockDevices = std::unordered_map<std::string, std::shared_ptr<BlockDeviceInfo>>;
+std::shared_ptr<BlockDevices> block_devices;
 
 bool need_android_dir = false;
 bool need_firmware_dir = false;
@@ -486,10 +488,16 @@ void OnPreBlockDevices(void) {
     mkdir(kFirmwareMountTarget.c_str(), 0755);
     mkdir(kTmpfsImgDir.c_str(), 0755);
     mkdir(kTryMountTarget.c_str(), 0755);
+    block_devices = std::make_shared<BlockDevices>();
     ParseConfig();
 }
 
 void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& devpath, const std::vector<std::string>& links) {
+    if (block_devices->contains(devpath)) {
+        LOG(ERROR) << "Block device " << devpath << " has already been parsed";
+        return;
+    }
+
     static const std::list<std::string> kIgnoredDevnamePrefixs = {
         "dm-", "loop", "ram", "zram"
     };
@@ -507,8 +515,8 @@ void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& de
     info.links = links;
     info.is_partition = std::isdigit(static_cast<unsigned char>(info.devname.back()));
     ParseBlockDevice(&info);
-    block_devices.push_back(std::make_shared<BlockDeviceInfo>(info));
-    UpdateMountInfo(block_devices.back());
+    block_devices->insert({devpath, std::make_shared<BlockDeviceInfo>(info)});
+    UpdateMountInfo(block_devices->at(devpath));
 }
 
 // TODO: Handle block device removal?
@@ -715,7 +723,6 @@ void OnPostBlockDevices(void) {
         LOG(FATAL) << "Failed to mount partitions";
     }
 
-    block_devices.clear();
     fstab.clear();
 }
 
