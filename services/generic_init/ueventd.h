@@ -22,7 +22,7 @@
 namespace android {
 namespace init {
 
-int ueventd_main(const UeventdConfiguration& ueventd_configuration);
+int ueventd_main(const UeventdConfiguration& ueventd_configuration, bool first_run);
 
 }  // namespace init
 }  // namespace android

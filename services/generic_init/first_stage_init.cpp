@@ -328,9 +328,9 @@ int FirstStageMain(int argc, char** argv) {
 
     // Kernel module loading and partition mounting are handled here
     MountHandler::OnPreBlockDevices();
-    ueventd_main(ramdisk_ueventd_configuration);
+    ueventd_main(ramdisk_ueventd_configuration, true);
     MountHandler::OnPostBlockDevices();
-    ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}));
+    ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}), false);
 
     struct stat new_root_info {};
     if (stat("/", &new_root_info) != 0) {

@@ -156,7 +156,7 @@ void parallel_main_loop(const UeventListener& uevent_listener,
     });
 }
 
-int ueventd_main(const UeventdConfiguration& ueventd_configuration) {
+int ueventd_main(const UeventdConfiguration& ueventd_configuration, bool first_run) {
     /*
      * init sets the umask to 077 for forked processes. We need to
      * create files with exact permissions, without modification by
@@ -199,7 +199,7 @@ int ueventd_main(const UeventdConfiguration& ueventd_configuration) {
     ColdBoot cold_boot(uevent_listener, uevent_handlers);
     cold_boot.Run();
 
-    if (MountHandler::CanQuitUeventd()) {
+    if (first_run && MountHandler::CanQuitUeventd()) {
         LOG(INFO) << "Exit ueventd";
         return EXIT_SUCCESS;
     }
