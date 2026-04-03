@@ -78,6 +78,7 @@ std::shared_ptr<BlockDevices> block_devices;
 
 bool need_android_dir = false;
 bool need_firmware_dir = false;
+bool need_mount_cache = false;
 
 // TODO: `discard` flag for RW filesystems
 constexpr char kMountOpts[] = "";
@@ -334,6 +335,10 @@ void ParseBlockDevice(BlockDeviceInfo* info) {
                     info->android_system_partition_have_subdirs.push_back(subdir);
                 }
             }
+            if (TryAccessDir(kTryMountTarget + "/cache")) {
+                LOG(INFO) << "/cache is a directory, will need to be mounted";
+                need_mount_cache = true;
+            }
         } else if (info->android_system_partition == "vendor") {
             for (const auto& subdir : possible_subdirs_in_vendor) {
                 tmp_path = kTryMountTarget + "/" + subdir;
@@ -531,6 +536,7 @@ bool CanQuitUeventd(void) {
     }
     if (param_mount_userdata != MountUserdataParam::TMPFS) {
         for (const auto& [part, bdev] : android_userdata_part_to_bdev_map) {
+            if (part == "cache" && !need_mount_cache) continue;
             if (bdev == nullptr) {
                 LOG(INFO) << __FUNCTION__ << ": Missing block device for userdata partition " << part;
                 ret = false;
@@ -605,6 +611,7 @@ void OnPostBlockDevices(void) {
 
     if (param_mount_userdata == MountUserdataParam::STANDARD_PARTITIONS_WITH_PARTNAME) {
         for (const auto& [partition, bdinfo] : android_userdata_part_to_bdev_map) {
+            if (partition == "cache" && !need_mount_cache) continue;
             FstabEntry entry = {
                 .blk_device = bdinfo->devpath,
                 .fs_mgr_flags = {
@@ -658,6 +665,8 @@ void OnPostBlockDevices(void) {
         }
 
         for (const auto& [part, img] : partition_img_list) {
+            if (part == "cache" && !need_mount_cache) continue;
+
             FstabEntry entry = {
                 .fs_mgr_flags = {
                     .first_stage_mount = true
@@ -686,6 +695,7 @@ void OnPostBlockDevices(void) {
                           == android_userdata_partitions.end()) {
                 continue;
             }
+            if (subdir == "cache" && !need_mount_cache) continue;
             FstabEntry entry = {
                 .blk_device = android_dir_path + "/" + subdir,
                 .fs_type = "none",
