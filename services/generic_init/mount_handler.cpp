@@ -281,7 +281,7 @@ std::string TryMountAndReturnFsType(const std::string& devpath, unsigned long mo
         errno = 0;
         ret = mount(devpath.c_str(), kTryMountTarget.c_str(), try_fs_type.c_str(), mountflags, kMountOpts);
         save_errno = errno;
-        if (ret && save_errno == EINVAL) continue;
+        if (ret && (save_errno == EINVAL || save_errno == ENODEV)) continue;
         if (ret) {
             PLOG(ERROR) << "Unable to try to mount " << devpath;
             return "";
