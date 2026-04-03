@@ -679,6 +679,8 @@ void OnPostBlockDevices(void) {
                 LOG(FATAL) << "Failed to setup loop device for image " << img;
             }
 
+            entry.mount_point = part == "userdata" ? "/data" : "/" + part;
+
             for (const auto& fs_type : fs_types_for_system_partitions) {
                 entry.fs_type = fs_type;
                 fstab.push_back(entry);
