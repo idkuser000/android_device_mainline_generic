@@ -36,6 +36,7 @@ namespace MountHandler {
 
 namespace fs = std::filesystem;
 using namespace ::android::fs_mgr;
+using android::base::StartsWithIgnoreCase;
 using android::base::EndsWithIgnoreCase;
 using android::base::Join;
 using android::base::ReadFileToString;
@@ -366,9 +367,10 @@ void ParseBlockDevice(BlockDeviceInfo* info) {
         }
 
         if (!info->have_android_dir.empty()) {
-            for (const auto& entry : fs::directory_iterator(info->have_android_dir)) {
+            for (const auto& entry : fs::directory_iterator(kTryMountTarget + "/" + info->have_android_dir)) {
                 std::string name = entry.path().filename();
                 if (entry.is_regular_file() && EndsWithIgnoreCase(name, kImageSuffix)) {
+                    if (StartsWithIgnoreCase(name, "initrd") || StartsWithIgnoreCase(name, "ramdisk")) continue;
                     info->android_dir_have_images.push_back(name);
                 } else if (entry.is_directory() && name != "firmware") {
                     info->android_dir_have_subdirs.push_back(name);
@@ -476,7 +478,7 @@ std::string SetupLoopDevice(const std::string& image, bool rw) {
         .lo_flags = 0
     };
     if (!rw) info.lo_flags |= LO_FLAGS_READ_ONLY;
-    if (!ioctl(loop_fd.get(), LOOP_SET_STATUS64, &info)) {
+    if (ioctl(loop_fd.get(), LOOP_SET_STATUS64, &info)) {
         PLOG(ERROR) << "Failed set loop flags for " << loop_device;
         return "";
     }
@@ -528,13 +530,16 @@ void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& de
 
 bool CanQuitUeventd(void) {
     bool ret = true;
-    for (const auto& [part, bdev] : android_system_part_to_bdev_map) {
-        if (bdev == nullptr) {
-            LOG(INFO) << __FUNCTION__ << ": Missing block device for system partition " << part;
-            ret = false;
+    if (param_mount_system == MountSystemParam::STANDARD_PARTITIONS_WITH_PARTNAME ||
+        param_mount_system == MountSystemParam::ANY_BLOCK_DEVICES_AS_PARTITION) {
+        for (const auto& [part, bdev] : android_system_part_to_bdev_map) {
+            if (bdev == nullptr) {
+                LOG(INFO) << __FUNCTION__ << ": Missing block device for system partition " << part;
+                ret = false;
+            }
         }
     }
-    if (param_mount_userdata != MountUserdataParam::TMPFS) {
+    if (param_mount_userdata == MountUserdataParam::STANDARD_PARTITIONS_WITH_PARTNAME) {
         for (const auto& [part, bdev] : android_userdata_part_to_bdev_map) {
             if (part == "cache" && !need_mount_cache) continue;
             if (bdev == nullptr) {
@@ -637,6 +642,19 @@ void OnPostBlockDevices(void) {
             std::string image_partition = image.substr(0, image.find_last_of('.'));
             std::string image_src = android_dir_path + "/" + image;
 
+            // Ignore images that matches with no partition
+            if (std::find(android_system_partitions.begin(),
+                           android_system_partitions.end(),
+                           image_partition)
+                           == android_system_partitions.end() &&
+                std::find(android_userdata_partitions.begin(),
+                           android_userdata_partitions.end(),
+                           image_partition)
+                           == android_userdata_partitions.end()) {
+                continue;
+            }
+
+            // Ignore system images while not mounting system from images
             if (param_mount_system != MountSystemParam::IMAGES &&
                 param_mount_system != MountSystemParam::IMAGES_COPY_TO_RAM &&
                 (std::find(android_system_partitions.begin(),
@@ -645,6 +663,8 @@ void OnPostBlockDevices(void) {
                            != android_system_partitions.end())) {
                 continue;
             }
+
+            // Ignore userdata images while not mounting userdata from images
             if (param_mount_userdata != MountUserdataParam::IMAGES &&
                 (std::find(android_userdata_partitions.begin(),
                            android_userdata_partitions.end(),
