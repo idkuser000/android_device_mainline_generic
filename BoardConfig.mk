@@ -20,6 +20,7 @@ BOARD_KERNEL_CMDLINE := \
     $(MAINLINE_COMMON_ANDROIDBOOT_PARAMS) \
     $(MAINLINE_COMMON_KERNEL_PARAMS) \
     androidboot.hardware=generic \
+    androidboot.init_fatal_pause=true \
     androidboot.selinux=permissive \
     androidboot.verifiedbootstate=orange \
     audit=0 \
