@@ -14,6 +14,11 @@ TARGET_ARCH_VARIANT := sandybridge
 TARGET_GRUB_ARCH := x86_64-efi
 TARGET_GRUB_2ND_ARCH := i386-pc
 
+# Boot parameters
+BOARD_KERNEL_CMDLINE += \
+    8250.nr_uarts=1 \
+    console=ttyS0
+
 # Kernel
 BOARD_KERNEL_IMAGE_NAME := bzImage
 ifeq ($(MAINLINE_GENERIC_USE_PRISTINE_KERNEL),true)
