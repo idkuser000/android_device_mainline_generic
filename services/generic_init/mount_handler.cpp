@@ -227,7 +227,7 @@ void ParseConfig(void) {
 
     ret = fs_mgr_get_boot_config(kMountSystemParam, &tmp);
     if (ret) {
-        if (kStringToMountSystemParamMap.find(tmp) != kStringToMountSystemParamMap.end()) {
+        if (kStringToMountSystemParamMap.contains(tmp)) {
             param_mount_system = kStringToMountSystemParamMap.at(tmp);
         } else {
             LOG(ERROR) << "Parameter " << kMountSystemParam << " value is invalid";
@@ -238,7 +238,7 @@ void ParseConfig(void) {
 
     ret = fs_mgr_get_boot_config(kMountUserdataParam, &tmp);
     if (ret) {
-        if (kStringToMountUserdataParamMap.find(tmp) != kStringToMountUserdataParamMap.end()) {
+        if (kStringToMountUserdataParamMap.contains(tmp)) {
             param_mount_userdata = kStringToMountUserdataParamMap.at(tmp);
         } else {
             LOG(ERROR) << "Parameter " << kMountUserdataParam << " value is invalid";
