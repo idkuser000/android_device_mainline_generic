@@ -314,7 +314,7 @@ int FirstStageMain(int argc, char** argv) {
         setenv("INIT_FORCE_DEBUGGABLE", "true", 1);
     }
 
-    auto ueventd_configuration = ParseConfig({"/system/etc/ueventd.ramdisk.rc"});
+    auto ramdisk_ueventd_configuration = ParseConfig({"/system/etc/ueventd.ramdisk.rc"});
 
     if (true) {
         mkdir("/first_stage_ramdisk", 0755);
@@ -328,8 +328,9 @@ int FirstStageMain(int argc, char** argv) {
 
     // Kernel module loading and partition mounting are handled here
     MountHandler::OnPreBlockDevices();
-    ueventd_main(ueventd_configuration);
+    ueventd_main(ramdisk_ueventd_configuration);
     MountHandler::OnPostBlockDevices();
+    ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}));
 
     struct stat new_root_info {};
     if (stat("/", &new_root_info) != 0) {
