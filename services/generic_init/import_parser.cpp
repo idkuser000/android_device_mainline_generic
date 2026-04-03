@@ -17,11 +17,31 @@
 #include "import_parser.h"
 
 #include <android-base/logging.h>
+#include <android-base/strings.h>
+
+#include <cstring>
+
+extern bool fs_mgr_get_boot_config(const std::string& key, std::string* out_val);
 
 namespace android {
 namespace init {
 
 namespace {
+
+using android::base::StartsWith;
+
+bool TranslatePropName(std::string* prop_name) {
+    if (*prop_name == "ro.board.platform") {
+        *prop_name = "board_platform";
+    } else if (*prop_name == "ro.hardware") {
+        *prop_name = "hardware";
+    } else if (StartsWith(*prop_name, "ro.boot.")) {
+        *prop_name = prop_name->substr(strlen("ro.boot."));
+    } else {
+        return false;
+    }
+    return true;
+}
 
 // From util.cpp
 Result<std::string> ExpandProps(const std::string& src) {
@@ -84,6 +104,9 @@ Result<std::string> ExpandProps(const std::string& src) {
         }
 
         std::string prop_val = "";
+        if (TranslatePropName(&prop_name)) {
+            fs_mgr_get_boot_config(prop_name, &prop_val);
+        }
         if (prop_val.empty()) {
             if (def_val.empty()) {
                 return Error() << "property '" << prop_name << "' doesn't exist while expanding '"
