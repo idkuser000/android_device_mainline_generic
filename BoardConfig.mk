@@ -21,7 +21,7 @@ TARGET_GRUB_LIVE_CONFIGS := $(DEVICE_PATH)/configs/bootmgr/grub-live.cfg
 # Boot parameters
 BOARD_KERNEL_CMDLINE := \
     $(MAINLINE_COMMON_ANDROIDBOOT_PARAMS) \
-    $(MAINLINE_COMMON_KERNEL_PARAMS) \
+    $(filter-out firmware_class.path=%,$(MAINLINE_COMMON_KERNEL_PARAMS)) \
     androidboot.addon_fstab_suffix=basic \
     androidboot.console=tty0 \
     androidboot.hardware=generic \
@@ -33,6 +33,7 @@ BOARD_KERNEL_CMDLINE := \
     androidboot.verifiedbootstate=orange \
     audit=0 \
     console=tty0 \
+    firmware_class.path=/mnt/vendor/firmware/ \
     mitigations=off \
     rdinit=/system/bin/generic_init
 
