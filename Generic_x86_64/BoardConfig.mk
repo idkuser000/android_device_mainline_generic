@@ -21,3 +21,9 @@ BOARD_KERNEL_CMDLINE_SERIAL_CONSOLE := \
 
 # Kernel
 BOARD_KERNEL_IMAGE_NAME := bzImage
+TARGET_KERNEL_CONFIG_EXT := \
+    $(TARGET_DEVICE_PATH)/configs/kernel/pre-debian.config \
+    $(PRODUCT_OUT)/obj/KCONFIG_OBJ/debian-filtered.config \
+    $(DEVICE_PATH)/configs/kernel/fix-build.config \
+    kernel/mainline/configs/fragments/y/fbcon.config \
+    $(DEVICE_PATH)/configs/kernel/customizations.config
