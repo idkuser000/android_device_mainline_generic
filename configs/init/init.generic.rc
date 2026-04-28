@@ -53,5 +53,4 @@ on early-init
 
 # Mount
 on late-fs
-    setprop ro.crypto.state unsupported
-    trigger nonencrypted
+    mount_all --late
