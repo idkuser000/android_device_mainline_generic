@@ -408,7 +408,7 @@ void ParseBlockDevice(BlockDeviceInfo* info) {
     // Try remount as RW
     mountflags &= ~MS_RDONLY;
     mountflags |= MS_REMOUNT;
-    info->rw = mount(NULL, kTryMountTarget.c_str(), NULL, mountflags, NULL) == 0;
+    info->rw = mount(NULL, kTryMountTarget.c_str(), NULL, mountflags, kMountOptsRw) == 0;
     LOG(INFO) << "Block device " << devpath << " can be mounted as " << (info->rw ? "read-write" : "read-only");
 
     // Cleanup and exit
