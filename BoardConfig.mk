@@ -16,7 +16,7 @@ $(call soong_config_set_bool,tinyhal,libaudiohalcm_continue_on_ctl_open_error,tr
 
 # Boot manager
 TARGET_BOOT_MANAGER := grub
-TARGET_GRUB_LIVE_CONFIGS := $(DEVICE_PATH)/configs/bootmgr/grub-live.cfg
+TARGET_GRUB_LIVE_CONFIGS := $(DEVICE_PATH)/configs/bootmgr/live/grub.cfg
 
 # Boot parameters
 BOARD_KERNEL_CMDLINE := \
