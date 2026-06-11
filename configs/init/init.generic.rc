@@ -52,5 +52,8 @@ on early-init
     exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -d /vendor/lib/modules zram.ko
 
 # Mount
+on init
+    trigger firmware_mounts_complete
+
 on late-fs
     mount_all --late
