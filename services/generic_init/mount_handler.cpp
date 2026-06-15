@@ -108,7 +108,7 @@ const std::list<std::string> android_system_partitions = {
 };
 
 const std::list<std::string> android_userdata_partitions = {
-    "cache", "data", "metadata"
+    "cache", "userdata", "metadata"
 };
 
 const std::list<std::string> possible_subdirs_in_system = {
