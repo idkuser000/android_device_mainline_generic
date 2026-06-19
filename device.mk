@@ -12,6 +12,7 @@ TARGET_CAMERA_PROVIDER_HAL := external
 TARGET_ENABLE_LOGCAT_TO_SERIAL := true
 TARGET_GRAPHICS_ALLOCATOR_HAL := minigbm-upstream
 TARGET_GRAPHICS_COMPOSER_HAL := custom
+TARGET_HEALTH_HAL := custom
 TARGET_MESA_DO_NOT_SET_AS_DEFAULT := true
 TARGET_SUPPORTS_SUSPEND := false
 TARGET_USES_TABLET_INPUT_AS_TOUCHSCREEN := true
@@ -92,6 +93,12 @@ PRODUCT_PACKAGES += \
 
 ## TODO(b/65201432): Swiftshader needs to create executable memory.
 PRODUCT_REQUIRES_INSECURE_EXECMEM_FOR_SWIFTSHADER := true
+
+# Health
+PRODUCT_PACKAGES += \
+    android.hardware.health-service.generic \
+    android.hardware.health-service.generic_recovery \
+    charger_res_images_vendor
 
 # HIDL
 PRODUCT_PACKAGES += \
