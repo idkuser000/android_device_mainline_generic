@@ -145,7 +145,7 @@ void main_loop(const UeventListener& uevent_listener,
     do {
         uevent_listener.Poll([&uevent_handlers, &first_run](const Uevent& uevent) {
             if (!first_run) {
-                LOG(INFO) << "Parse uevent " << ConstructUeventString(uevent);
+                LOG(INFO) << "Handle uevent " << ConstructUeventString(uevent);
             }
             for (auto& uevent_handler : uevent_handlers) {
                 uevent_handler->HandleUevent(uevent);
@@ -153,7 +153,7 @@ void main_loop(const UeventListener& uevent_listener,
             if (first_run && MountHandler::CanQuitUeventd(false)) {
                 return ListenerAction::kStop;
             } else if (!first_run) {
-                LOG(INFO) << "Parse uevent done";
+                LOG(INFO) << "Handled uevent";
             }
             return ListenerAction::kContinue;
         }, true, 5s);
