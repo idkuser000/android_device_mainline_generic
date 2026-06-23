@@ -38,6 +38,8 @@
 #include <libdm/dm.h>
 #include <private/android_filesystem_config.h>
 
+#include "util.h"
+
 using namespace std::chrono_literals;
 
 using android::base::Basename;
@@ -53,32 +55,6 @@ using android::base::Trim;
 
 namespace android {
 namespace init {
-
-namespace {
-
-// From util.cpp
-
-bool make_dir(const std::string& path, mode_t mode) {
-    int rc = mkdir(path.c_str(), mode);
-    return rc == 0;
-}
-
-bool mkdir_recursive(const std::string& path, mode_t mode) {
-    std::string::size_type slash = 0;
-    while ((slash = path.find('/', slash + 1)) != std::string::npos) {
-        auto directory = path.substr(0, slash);
-        struct stat info;
-        if (stat(directory.c_str(), &info) != 0) {
-            auto ret = make_dir(directory, mode);
-            if (!ret && errno != EEXIST) return false;
-        }
-    }
-    auto ret = make_dir(path, mode);
-    if (!ret && errno != EEXIST) return false;
-    return true;
-}
-
-}  // namespace
 
 /* Given a path that may start with a PCI device, populate the supplied buffer
  * with the PCI domain/bus number and the peripheral ID and return 0.

@@ -49,6 +49,8 @@
 
 #include "reboot_utils.h"
 
+extern bool fs_mgr_get_boot_config(const std::string& key, std::string* out_val);
+
 using android::base::boot_clock;
 using android::base::StartsWith;
 using namespace std::literals::string_literals;
@@ -163,6 +165,19 @@ bool is_dir(const char* pathname) {
     return S_ISDIR(info.st_mode);
 }
 
+static bool TranslatePropName(std::string* prop_name) {
+    if (*prop_name == "ro.board.platform") {
+        *prop_name = "board_platform";
+    } else if (*prop_name == "ro.hardware") {
+        *prop_name = "hardware";
+    } else if (StartsWith(*prop_name, "ro.boot.")) {
+        *prop_name = prop_name->substr(strlen("ro.boot."));
+    } else {
+        return false;
+    }
+    return true;
+}
+
 Result<std::string> ExpandProps(const std::string& src) {
     const char* src_ptr = src.c_str();
 
@@ -227,7 +242,10 @@ Result<std::string> ExpandProps(const std::string& src) {
             return Error() << "invalid zero-length property name in '" << src << "'";
         }
 
-        std::string prop_val = android::base::GetProperty(prop_name, "");
+        std::string prop_val = "";
+        if (TranslatePropName(&prop_name)) {
+            fs_mgr_get_boot_config(prop_name, &prop_val);
+        }
         if (prop_val.empty()) {
             if (def_val.empty()) {
                 return Error() << "property '" << prop_name << "' doesn't exist while expanding '"
@@ -312,13 +330,6 @@ std::string CleanDirPath(const std::string& path) {
 }
 
 static void InitAborter(const char* abort_message) {
-    // When init forks, it continues to use this aborter for LOG(FATAL), but we want children to
-    // simply abort instead of trying to reboot the system.
-    if (getpid() != 1) {
-        android::base::DefaultAborter(abort_message);
-        return;
-    }
-
     InitFatalReboot(SIGABRT);
 }
 

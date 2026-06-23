@@ -27,47 +27,10 @@
 #include <android-base/strings.h>
 
 #include "tokenizer.h"
+#include "util.h"
 
 namespace android {
 namespace init {
-
-namespace {
-
-// From util.cpp
-
-bool is_dir(const char* pathname) {
-    struct stat info;
-    if (stat(pathname, &info) == -1) {
-        return false;
-    }
-    return S_ISDIR(info.st_mode);
-}
-
-Result<std::string> ReadFile(const std::string& path) {
-    android::base::unique_fd fd(
-        TEMP_FAILURE_RETRY(open(path.c_str(), O_RDONLY | O_NOFOLLOW | O_CLOEXEC)));
-    if (fd == -1) {
-        return ErrnoError() << "open() failed";
-    }
-
-    // For security reasons, disallow world-writable
-    // or group-writable files.
-    struct stat sb;
-    if (fstat(fd.get(), &sb) == -1) {
-        return ErrnoError() << "fstat failed()";
-    }
-    if ((sb.st_mode & (S_IWGRP | S_IWOTH)) != 0) {
-        return Error() << "Skipping insecure file";
-    }
-
-    std::string content;
-    if (!android::base::ReadFdToString(fd, &content)) {
-        return ErrnoError() << "Unable to read file contents";
-    }
-    return content;
-}
-
-}  // namespace
 
 Parser::Parser() {}
 
