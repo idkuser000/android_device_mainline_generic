@@ -121,6 +121,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     console_override.rc \
+    device_generic_logging.rc \
     device_generic_settings.rc \
     device_generic_settings.sh \
     hal_services.rc \

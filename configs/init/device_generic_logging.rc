@@ -1,0 +1,12 @@
+service save_early_logcat /system/bin/logcat -b all -f /metadata/early_logcat.log
+    class core
+    user root
+    group root log
+    oneshot
+    disabled
+
+on late-init && property:ro.boot.save_early_logs=1
+    start save_early_logcat
+
+on property:sys.boot_completed=1
+    stop save_early_logcat
