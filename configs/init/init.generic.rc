@@ -77,3 +77,7 @@ on late-fs
 # VirtWifi
 on post-fs-data && property:ro.boot.wifi_impl=virt_wifi
     start setup_wifi
+
+# Wi-Fi
+on property:sys.boot_completed=1
+    rm /data/vendor/wifi/wpa/sockets/wlan0
