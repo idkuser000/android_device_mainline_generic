@@ -32,6 +32,7 @@ cc_binary {
         "uevent_listener.cpp",
         "ueventd.cpp",
         "ueventd_parser.cpp",
+        "util.cpp",
 
         "mount_handler.cpp",
         "mount_helpers.cpp",
