@@ -121,16 +121,39 @@ extern bool fs_mgr_get_boot_config(const std::string& key, std::string* out_val)
 namespace android {
 namespace init {
 
+static std::string ConstructUeventString(const Uevent& uevent) {
+    std::string result;
+    result += "ACTION=" + uevent.action;
+    result += " DEVPATH=" + uevent.path;
+    result += " SUBSYSTEM=" + uevent.subsystem;
+    result += " DRIVER=" + uevent.driver;
+    result += " FIRMWARE=" + uevent.firmware;
+    result += " MAJOR=" + std::to_string(uevent.major);
+    result += " MINOR=" + std::to_string(uevent.minor);
+    result += " PARTN=" + std::to_string(uevent.partition_num);
+    result += " SEQNUM=" + std::to_string(uevent.seqnum);
+    result += " PARTNAME=" + uevent.partition_name;
+    result += " PARTUUID=" + uevent.partition_uuid;
+    result += " DEVNAME=" + uevent.device_name;
+    result += " MODALIAS=" + uevent.modalias;
+    return result;
+}
+
 void main_loop(const UeventListener& uevent_listener,
                const std::vector<std::shared_ptr<UeventHandler>>& uevent_handlers,
                const bool& first_run) {
     do {
         uevent_listener.Poll([&uevent_handlers, &first_run](const Uevent& uevent) {
+            if (!first_run) {
+                LOG(INFO) << "Parse uevent " << ConstructUeventString(uevent);
+            }
             for (auto& uevent_handler : uevent_handlers) {
                 uevent_handler->HandleUevent(uevent);
             }
             if (first_run && MountHandler::CanQuitUeventd(false)) {
                 return ListenerAction::kStop;
+            } else if (!first_run) {
+                LOG(INFO) << "Parse uevent done";
             }
             return ListenerAction::kContinue;
         }, true, 5s);
