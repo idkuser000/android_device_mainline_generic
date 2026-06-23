@@ -973,6 +973,8 @@ out:
             continue;
         }
         CleanupDrmDevice(card);
+        fs::rename(card.path, card.path + "_orig");
+        fs::create_symlink("/dev/null", card.path);
     }
     for (auto& render : all_renders) {
         if (render.path == result_render_path) {
@@ -980,6 +982,8 @@ out:
             continue;
         }
         CleanupDrmDevice(render);
+        fs::rename(render.path, render.path + "_orig");
+        fs::create_symlink("/dev/null", render.path);
     }
     return {result_card, result_render};
 }
