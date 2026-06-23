@@ -36,6 +36,7 @@ BOARD_KERNEL_CMDLINE := \
     firmware_class.path=/mnt/vendor/firmware/ \
     mitigations=off \
     rdinit=/system/bin/generic_init \
+    sysctl.kernel.firmware_config.force_sysfs_fallback=1 \
     sysctl.kernel.modprobe=/vendor/bin/modprobe_kernel
 
 # Filesystem
