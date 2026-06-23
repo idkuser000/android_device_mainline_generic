@@ -5,6 +5,7 @@
 
 #include "mount_handler.h"
 #include "mount_helpers.h"
+#include "util.h"
 
 #include <android-base/file.h>
 #include <android-base/logging.h>
@@ -45,6 +46,7 @@ using android::base::StartsWith;
 using android::base::unique_fd;
 using android::dm::LoopControl;
 using android::fs_mgr::ReadFstabFromFile;
+using android::init::mkdir_recursive;
 using MountHelpers::TryAccessDir;
 using MountHelpers::TryAccessFile;
 using std::chrono_literals::operator""s;
@@ -217,10 +219,10 @@ MountUserdataParam param_mount_userdata = MountUserdataParam::STANDARD_PARTITION
 constexpr char kFirmwareFstabMountPoint[] = "/mnt/vendor/firmware";
 
 const std::string kAddonFstabPrefix = "fstab.generic_init.addon.";
-const std::string kAndroidMountTarget = "/mnt/android";
-const std::string kFirmwareMountTarget = "/mnt/firmware";
-const std::string kTmpfsImgDir = "/mnt/img";
-const std::string kTryMountTarget = "/mnt/try";
+const std::string kAndroidMountTarget = "/mnt/vendor/generic_init/android";
+const std::string kFirmwareMountTarget = "/mnt/vendor/generic_init/firmware";
+const std::string kTmpfsImgDir = "/mnt/vendor/generic_init/img";
+const std::string kTryMountTarget = "/mnt/vendor/generic_init/try";
 const std::string kImageSuffix = ".img";
 
 Fstab fstab_userdata_on_tmpfs = {
@@ -646,10 +648,10 @@ std::string SetupLoopDevice(const std::string& image, bool rw) {
 }  // namespace
 
 void OnPreBlockDevices(void) {
-    mkdir(kAndroidMountTarget.c_str(), 0755);
-    mkdir(kFirmwareMountTarget.c_str(), 0755);
-    mkdir(kTmpfsImgDir.c_str(), 0755);
-    mkdir(kTryMountTarget.c_str(), 0755);
+    mkdir_recursive(kAndroidMountTarget, 0755);
+    mkdir_recursive(kFirmwareMountTarget, 0755);
+    mkdir_recursive(kTmpfsImgDir, 0755);
+    mkdir_recursive(kTryMountTarget, 0755);
     block_devices = std::make_shared<BlockDevices>();
     ParseConfig();
 }
