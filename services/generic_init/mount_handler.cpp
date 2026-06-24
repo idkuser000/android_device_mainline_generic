@@ -841,7 +841,11 @@ void OnPostBlockDevices(void) {
             }
         }
 
-        if (!firmware_img.empty()) {
+        if (param_mount_firmware == MountFirmwareParam::IMAGE ||
+            param_mount_firmware == MountFirmwareParam::IMAGE_COPY_TO_RAM) {
+            if (firmware_img.empty()) {
+                LOG(FATAL) << "Firmware image was not found";
+            }
             FstabEntry entry = {
                 .mount_point = kFirmwareFstabMountPoint,
                 .fs_mgr_flags = {
