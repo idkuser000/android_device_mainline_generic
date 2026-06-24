@@ -785,6 +785,13 @@ void OnPostBlockDevices(void) {
             for (const auto& fs_type : fs_types_for_system_partitions) {
                 entry.fs_type = fs_type;
                 fstab.push_back(entry);
+
+                if (fs_type == "ext4" && !(entry.flags & MS_RDONLY)) {
+                    auto flags_bak = entry.flags;
+                    entry.flags |= MS_RDONLY;
+                    fstab.push_back(entry);
+                    entry.flags = flags_bak;
+                }
             }
         }
     }
@@ -910,6 +917,13 @@ void OnPostBlockDevices(void) {
             for (const auto& fs_type : fs_types_for_system_partitions) {
                 entry.fs_type = fs_type;
                 fstab.push_back(entry);
+
+                if (fs_type == "ext4" && !(entry.flags & MS_RDONLY)) {
+                    auto flags_bak = entry.flags;
+                    entry.flags |= MS_RDONLY;
+                    fstab.push_back(entry);
+                    entry.flags = flags_bak;
+                }
             }
         }
     }
