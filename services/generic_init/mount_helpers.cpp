@@ -186,8 +186,6 @@ bool MountPartition(Fstab& fstab_, const Fstab::iterator& begin,
 bool MountPartitions(Fstab& fstab_) {
     if (!TrySwitchSystemAsRoot(fstab_)) return false;
 
-    if (!SkipMountingPartitions(&fstab_, true /* verbose */)) return false;
-
     for (auto current = fstab_.begin(); current != fstab_.end();) {
         // We've already mounted /system above.
         if (current->mount_point == "/system") {
