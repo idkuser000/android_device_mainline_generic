@@ -4,5 +4,7 @@
 
 Required additional boot parameters (as tested on `Remix Mini PC`):
 ```
-androidboot.hwc_hal_service=1 androidboot.prefer_drm_render_name=lima memtest=2
+androidboot.prefer_drm_render_name=lima memtest=2
 ```
+
+Graphics sometimes works and sometimes not. If it doesn't work, try rebooting.
