@@ -79,5 +79,8 @@ on post-fs-data && property:ro.boot.wifi_impl=virt_wifi
     start setup_wifi
 
 # Wi-Fi
+on early-init
+    exec u:r:su:s0 -- /vendor/bin/toybox_vendor rfkill unblock all
+
 on property:sys.boot_completed=1
     rm /data/vendor/wifi/wpa/sockets/wlan0
