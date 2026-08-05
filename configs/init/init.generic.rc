@@ -44,7 +44,7 @@ on early-init && property:ro.boot.lcd_density=*
 on init
     start vendor.get_display_ppi
 
-on late-init && property:ro.vendor.get_display_ppi.lcd_density=*
+on early-boot && property:ro.vendor.get_display_ppi.lcd_density=*
     setprop ro.sf.lcd_density ${ro.vendor.get_display_ppi.lcd_density}
 
 on property:ro.hardware.gralloc=default && property:sys.bootstat.first_boot_completed=1
