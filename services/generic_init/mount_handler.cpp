@@ -755,7 +755,7 @@ bool CanQuitUeventd(bool print_log) {
     return ret;
 }
 
-void OnPostBlockDevices(void) {
+void OnPostBlockDevices(bool is_recovery_mode) {
     Fstab fstab;
     int ret;
     std::error_code ec;
@@ -770,8 +770,9 @@ void OnPostBlockDevices(void) {
         android_dir_path = kAndroidMountTarget + "/" + bdinfo->have_android_dir;
     }
 
-    if (param_mount_system == MountSystemParam::STANDARD_PARTITIONS_WITH_PARTNAME ||
-        param_mount_system == MountSystemParam::ANY_BLOCK_DEVICES_AS_PARTITION) {
+    if (!is_recovery_mode &&
+        (param_mount_system == MountSystemParam::STANDARD_PARTITIONS_WITH_PARTNAME ||
+        param_mount_system == MountSystemParam::ANY_BLOCK_DEVICES_AS_PARTITION)) {
         for (const auto& [partition, bdinfo] : android_system_part_to_bdev_map) {
             if (partition != bdinfo->android_system_partition) continue;
             FstabEntry entry = {
@@ -796,7 +797,7 @@ void OnPostBlockDevices(void) {
         }
     }
 
-    if (param_mount_userdata == MountUserdataParam::STANDARD_PARTITIONS_WITH_PARTNAME) {
+    if (!is_recovery_mode && param_mount_userdata == MountUserdataParam::STANDARD_PARTITIONS_WITH_PARTNAME) {
         for (const auto& [partition, bdinfo] : android_userdata_part_to_bdev_map) {
             if (partition == "cache" && !need_mount_cache) continue;
             FstabEntry entry = {
@@ -832,6 +833,9 @@ void OnPostBlockDevices(void) {
                 image_type != ImageType::USERDATA) {
                 continue;
             }
+
+            // Ignore non-firmware images while in recovery mode
+            if (is_recovery_mode && image_type != ImageType::FIRMWARE) continue;
 
             // Ignore firmware images while not mounting system from images
             if (image_type == ImageType::FIRMWARE &&
@@ -928,7 +932,8 @@ void OnPostBlockDevices(void) {
         }
     }
 
-    if (param_mount_userdata == MountUserdataParam::BIND_MOUNT_DIR) {
+    if (!is_recovery_mode &&
+        param_mount_userdata == MountUserdataParam::BIND_MOUNT_DIR) {
         std::shared_ptr<BlockDeviceInfo> bdinfo = block_device_for_android_dir;
         for (const auto& subdir : bdinfo->android_dir_have_subdirs) {
             if (std::find(android_userdata_partitions.begin(),
@@ -951,7 +956,7 @@ void OnPostBlockDevices(void) {
         }
     }
 
-    if (param_mount_userdata == MountUserdataParam::TMPFS) {
+    if (!is_recovery_mode && param_mount_userdata == MountUserdataParam::TMPFS) {
         for (const auto& entry : fstab_userdata_on_tmpfs) {
             fstab.push_back(std::move(entry));
         }
@@ -985,11 +990,11 @@ void OnPostBlockDevices(void) {
 
     // Unmount block device for android dir if it's no longer used
     // Allowing live boot users to eject the boot media afterwards
-    if (umount(kAndroidMountTarget.c_str()) == 0) {
+    if (!is_recovery_mode && umount(kAndroidMountTarget.c_str()) == 0) {
         LOG(INFO) << "umount " << kAndroidMountTarget << " successfully";
     }
 
-    if (!addon_fstab.empty()) {
+    if (!is_recovery_mode && !addon_fstab.empty()) {
         for (auto& entry : addon_fstab) {
             fstab.push_back(std::move(entry));
         }

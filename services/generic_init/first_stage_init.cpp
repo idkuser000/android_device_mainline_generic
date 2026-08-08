@@ -496,6 +496,7 @@ int FirstStageMain(int argc, char** argv) {
     if (boot_mode == BootMode::RECOVERY_MODE) {
         MountHandler::OnPreBlockDevices();
         ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}), true);
+        MountHandler::OnPostBlockDevices(true);
         ExecuteVendorInitProgram(boot_mode);
     } else {
         // Create the temporary mount directories, and parse mount configuration

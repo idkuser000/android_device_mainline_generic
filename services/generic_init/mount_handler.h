@@ -18,6 +18,6 @@ void OnBlockDeviceAdd(const android::init::Uevent& uevent, const std::string& de
 
 bool CanQuitUeventd(bool print_log);
 
-void OnPostBlockDevices(void);
+void OnPostBlockDevices(bool is_recovery_mode = false);
 
 }  // namespace
