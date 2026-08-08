@@ -498,8 +498,10 @@ int FirstStageMain(int argc, char** argv) {
         ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}), true);
         ExecuteVendorInitProgram(boot_mode);
     } else {
-        // Kernel module loading and partition mounting are handled here
+        // Create the temporary mount directories, and parse mount configuration
         MountHandler::OnPreBlockDevices();
+
+        // Load kernel modules, create devices, and parse partitions, until ready
         ueventd_main(ParseConfig({"/system/etc/ueventd.ramdisk.rc"}), true);
 
         mkdir("/first_stage_ramdisk", 0755);
@@ -510,15 +512,18 @@ int FirstStageMain(int argc, char** argv) {
         }
         SwitchRoot("/first_stage_ramdisk");
 
+        // Mount partitions
         MountHandler::OnPostBlockDevices();
 
         ExecuteVendorInitProgram(boot_mode);
 
+        // Load kernel modules listed on modules.load from vendor partition
         if (!LoadKernelModules(boot_mode, false,
                             want_parallel, "/vendor/lib/modules")) {
             LOG(ERROR) << "Failed to load kernel modules from vendor partition";
         }
 
+        // Run ueventd with normal boot configuration, until there's no new uevents
         ueventd_main(ParseConfig({"/system/etc/ueventd.rc"}), false);
     }
 
