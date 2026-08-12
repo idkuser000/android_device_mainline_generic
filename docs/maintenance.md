@@ -23,7 +23,7 @@ Here are the most common maintenance tasks:
 | `configs/input/Generic.kl` | `frameworks/base/data/keyboards/Generic.kl` |
 | `configs/misc/pci.ids` | https://pci-ids.ucw.cz/ |
 | `configs/misc/usb.ids` | http://www.linux-usb.org/usb-ids.html |
-| `configs/properties/vendor_bluetooth_profiles.prop` | `device/google/cuttlefish/shared/phone/*.prop` |
+| `configs/properties/vendor_bluetooth_profiles.prop` | `device/linaro/dragonboard/product.prop` |
 | `hals/health` | `hardware/interfaces/health/aidl/default` and `device/google/cuttlefish/guest/hals/health/health-aidl.cpp` |
 | `overlays/rro_overlays/MainlineGenericWifiOverlay` | `device/google/cuttlefish/shared/phone/overlays/CuttlefishWifiOverlay` |
 | `services/generic_init` | `system/core/init` |
