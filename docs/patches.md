@@ -2,14 +2,20 @@
 
 Based on repositories from LineageOS org, the lists below might be not applicable to any other upstream.
 
-## external/boringssl
-
-Apply from [here](../.patches/external/boringssl).
-
 ## external/mesa
 
 All the entries [here](https://review.lineageos.org/q/project:LineageOS/android_external_mesa+owner:me.cafebabe@gmail.com+status:open).
 You can simply check out the repository to the HEAD of the top entry on the chain.
+
+## external/zstd
+
+For `lineage-24.0` branch:
+
+| Change id | Change number | Commit message |
+|---------------|-----------|----------------|
+| `I12cbe2c8b47a0ceccf248b088202fefc74525b3a` | 496520 | `zstd: Android.bp: Add `//vendor:__subpackages__` to visibility` |
+
+You can run `repopick [change number ...]` to pick these patches.
 
 ## kernel/mainline/android-mainline
 
