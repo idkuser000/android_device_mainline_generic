@@ -250,12 +250,14 @@ int ueventd_main(const UeventdConfiguration& ueventd_configuration, bool first_r
         uevent_handler->ColdbootDone();
     }
 
+    /*
     // We use waitpid() in ColdBoot, so we can't ignore SIGCHLD until now.
     signal(SIGCHLD, SIG_IGN);
     // Reap and pending children that exited between the last call to waitpid() and setting SIG_IGN
     // for SIGCHLD above.
     while (waitpid(-1, nullptr, WNOHANG) > 0) {
     }
+    */
 
     // Restore prio before main loop
     setpriority(PRIO_PROCESS, 0, 0);
