@@ -35,3 +35,7 @@ For `lineage-23.2` branch:
 | `Id51f200ca2c5123cf16212c363d770f503744581` | 471111 | `Add console boot mode` |
 
 You can run `repopick [change number ...]` to pick these patches.
+
+## system/memory/libmeminfo
+
+Apply from [here](../.patches/system/memory/libmeminfo).
