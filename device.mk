@@ -131,6 +131,7 @@ PRODUCT_PACKAGES += \
     init_dev_config_override.rc
 
 PRODUCT_PACKAGES += \
+    use_memfd.rc \
     zram.rc
 
 PRODUCT_PACKAGES += \
@@ -185,7 +186,8 @@ PRODUCT_SHIPPING_API_LEVEL := 33
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(DEVICE_PATH)
+    $(DEVICE_PATH) \
+    kernel/mainline/configs
 
 # USB
 PRODUCT_PACKAGES += \
