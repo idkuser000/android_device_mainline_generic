@@ -8,6 +8,7 @@ DEVICE_PATH := device/mainline/generic
 # Inherit from mainline/common
 TARGET_AUDIO_HAL := tinyhal
 TARGET_AUDIO_POLICY := custom
+TARGET_CONSOLE_AS_ROOT := true
 TARGET_ENABLE_LOGCAT_TO_SERIAL := true
 TARGET_ENABLE_VIRT_WIFI := true
 TARGET_EXTERNAL_CAMERA_PROVIDER_HAL := default-aidl
