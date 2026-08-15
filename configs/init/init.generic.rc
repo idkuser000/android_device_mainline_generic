@@ -45,7 +45,10 @@ on init
     start vendor.get_display_ppi
 
 on early-boot && property:ro.vendor.get_display_ppi.lcd_density=*
-    setprop ro.sf.lcd_density ${ro.vendor.get_display_ppi.lcd_density:-160}
+    setprop ro.sf.lcd_density ${ro.vendor.get_display_ppi.lcd_density}
+
+on boot
+    setprop ro.sf.lcd_density 160
 
 on property:ro.hardware.gralloc=default && property:sys.bootstat.first_boot_completed=1
     write /sys/class/vtconsole/vtcon0/bind 0
