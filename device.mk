@@ -184,6 +184,10 @@ PRODUCT_COPY_FILES += \
 # Scoped Storage
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
+# Sensors
+$(call soong_config_set_bool,sensors_hal_mainline,include_all_permission_xmls,true)
+$(call soong_config_set_bool,sensors_hal_mainline,run_as_root,true)
+
 # Shipping API level
 PRODUCT_SHIPPING_API_LEVEL := 33
 
