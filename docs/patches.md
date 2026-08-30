@@ -8,7 +8,7 @@ Apply from [here](../.patches/external/boringssl).
 
 ## external/mesa
 
-All the entries [here](https://review.lineageos.org/q/project:LineageOS/android_external_mesa+owner:me.cafebabe@gmail.com+status:open).
+All the entries [here](https://review.lineageos.org/q/project:LineageOS/android_external_mesa+owner:me.cafebabe@gmail.com).
 You can simply check out the repository to the HEAD of the top entry on the chain.
 
 ## kernel/mainline/android-mainline
