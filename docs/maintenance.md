@@ -18,7 +18,6 @@ Here are the most common maintenance tasks:
 |----------------|----------|
 | `configs/audio/primary_audio_policy_configuration.xml` | `frameworks/av/services/audiopolicy/config/primary_audio_policy_configuration_7_0.xml` |
 | `configs/init/console_override.rc` | `console` service on `system/core/rootdir/init.rc` |
-| `configs/init/hal_services.rc` | `hardware/interfaces/graphics/allocator/2.0/default/android.hardware.graphics.allocator@2.0-service.rc` and `external/drm_hwcomposer-upstream/hwc3/hwc3-drm-upstream.rc` |
 | `configs/init/init_dev_config_override.rc` | `init_dev_config` service on `system/core/rootdir/init.rc` |
 | `configs/input/Generic.kl` | `frameworks/base/data/keyboards/Generic.kl` |
 | `configs/misc/pci.ids` | https://pci-ids.ucw.cz/ |
