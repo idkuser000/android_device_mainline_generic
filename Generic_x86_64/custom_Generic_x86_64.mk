@@ -13,7 +13,7 @@ $(call inherit-product, vendor/lineage/config/common_full_tablet_wifionly.mk)
 # Inherit from device
 $(call inherit-product, device/mainline/generic/Generic_x86_64/device.mk)
 
-PRODUCT_NAME := lineage_Generic_x86_64
+PRODUCT_NAME := custom_Generic_x86_64
 PRODUCT_DEVICE := Generic_x86_64
 PRODUCT_BRAND := Generic
 PRODUCT_MANUFACTURER := Generic
